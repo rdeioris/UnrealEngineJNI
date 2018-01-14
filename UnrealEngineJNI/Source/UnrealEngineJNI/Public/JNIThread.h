@@ -17,8 +17,18 @@ private:
 	JavaVM *Vm;
 	FRunnableThread* Thread;
 
+protected:
+	jclass JNIClass;
+	jobject JNIObject;
+	jmethodID JNIMethodID;
+
+	jclass JThreadClass;
+	jobject JCurrentThread;
+	jmethodID JThreadInterrupt;
+
 public:
-	FJNIRunnable();
+	FJNIRunnable(jobject JObject, jmethodID JMethodID);
+	FJNIRunnable(jclass JClass, jmethodID JMethodID);
 	virtual bool Init();
 	virtual uint32 Run();
 	virtual void Stop();
@@ -36,6 +46,7 @@ private:
 	FJNIRunnable *JNIRunnable;
 	
 public:
-	void StartJNIThread();
+	void StartJNIThread(jobject JObject, jmethodID JMethodID);
+	void StartJNIThread(jclass JClass, jmethodID JMethodID);
 	~UJNIThread();
 };

@@ -17,10 +17,10 @@ class UNREALENGINEJNI_API UJNIThrowable : public UJNIObject
 
 public:
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FString GetJNIExceptionMessage();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FString GetJNIExceptionClassName();
 	
 	

@@ -337,24 +337,30 @@ UJNIThread *UJNIComponent::JNISpawnThreadMethod(UJNIObject *JNIObject, UJNIMetho
 {
 	bSuccess = false;
 	JNIEnv *Env = GetJavaVirtualMachineMainThread();
-	if (!Env)// || !JNIObject || !JNIMethodID)
+	if (!Env || !JNIObject || !JNIMethodID)
 	{
 		return nullptr;
 	}
-	/*jobject JObject = Env->CallObjectMethodA(JNIObject->GetJObject(), JNIMethodID->GetJMethodID(), nullptr);
-	if (Env->ExceptionCheck())
-	{
-		jthrowable JThrowable = Env->ExceptionOccurred();
-		UJNIThrowable *JNIThrowable = NewObject<UJNIThrowable>();
-		JNIThrowable->SetJObject(Env, JThrowable);
-		Env->ExceptionClear();
-		Exception = JNIThrowable;
-
-		return nullptr;
-	}*/
+	
 
 	UJNIThread *JNIThread = NewObject<UJNIThread>();
-	JNIThread->StartJNIThread();
+	JNIThread->StartJNIThread(JNIObject->GetJObject(), JNIMethodID->GetJMethodID());
+	bSuccess = true;
+	return JNIThread;
+}
+
+UJNIThread *UJNIComponent::JNISpawnThreadStaticMethod(UJNIClass *JNIClass, UJNIMethodID *JNIMethodID, const TArray<FJNIValue>& JNIArguments, bool & bSuccess, UJNIThrowable *&Exception)
+{
+	bSuccess = false;
+	JNIEnv *Env = GetJavaVirtualMachineMainThread();
+	if (!Env || !JNIClass || !JNIMethodID)
+	{
+		return nullptr;
+	}
+
+
+	UJNIThread *JNIThread = NewObject<UJNIThread>();
+	JNIThread->StartJNIThread(JNIClass->GetJClass(), JNIMethodID->GetJMethodID());
 	bSuccess = true;
 	return JNIThread;
 }

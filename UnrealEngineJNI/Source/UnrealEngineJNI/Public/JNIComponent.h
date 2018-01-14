@@ -87,4 +87,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, meta = (AutoCreateRefTerm = "JNIArguments"))
 	UJNIThread *JNISpawnThreadMethod(UJNIObject *JNIObject, UJNIMethodID *JNIMethodID, const TArray<FJNIValue>& JNIArguments, bool & bSuccess, UJNIThrowable *&Exception);
+
+	UFUNCTION(BlueprintCallable, meta = (AutoCreateRefTerm = "JNIArguments"))
+	UJNIThread *JNISpawnThreadStaticMethod(UJNIClass *JNIClass, UJNIMethodID *JNIMethodID, const TArray<FJNIValue>& JNIArguments, bool & bSuccess, UJNIThrowable *&Exception);
 };
