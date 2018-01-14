@@ -1,18 +1,38 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
+using System;
 using System.IO;
 
 public class UnrealEngineJNI : ModuleRules
 {
 
-    private string javaHome = "D:/Java/jdk";
+    // leave it null for using JAVA_HOME environment variable
+    private string javaHome = null;
 
     public UnrealEngineJNI(ReadOnlyTargetRules Target) : base(Target)
     {
         PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
+        if (javaHome == null)
+        {
+            javaHome = Environment.GetEnvironmentVariable("JAVA_HOME");
+            if (javaHome == null)
+            {
+                Console.WriteLine("JAVA_HOME is not set, compilation will fail...");
+            }
+        }
 
+        if (javaHome != null)
+        {
+
+            Console.WriteLine("Using JAVA_HOME={0}", javaHome);
+
+            if (!Directory.Exists(javaHome))
+            {
+                Console.WriteLine("The JAVA_HOME directory does not exist, compilation will fail...");
+            }
+        }
 
         PublicIncludePaths.AddRange(
             new string[] {

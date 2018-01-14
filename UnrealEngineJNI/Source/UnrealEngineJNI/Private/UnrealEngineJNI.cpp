@@ -12,8 +12,11 @@ void FUnrealEngineJNIModule::StartupModule()
 	JavaVirtualMachine = nullptr;
 	JavaVirtualMachineMainThread = nullptr;
 	JavaVirtualMachineArgs.version = JNI_VERSION_1_6;
+
 	JavaVMOption option0;
-	option0.optionString = "-Djava.class.path=D:/JavaTest001/Content";
+	FString ClassPath = FString("-Djava.class.path=") + FPaths::ProjectContentDir();
+	option0.optionString = TCHAR_TO_UTF8(*ClassPath);
+
 	JavaVirtualMachineArgs.nOptions = 1;
 	JavaVirtualMachineArgs.options = &option0;
 

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ModuleManager.h"
+#include "Paths.h"
 #include <jni.h>
 
 
