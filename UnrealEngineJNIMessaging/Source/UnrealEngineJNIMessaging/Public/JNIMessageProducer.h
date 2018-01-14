@@ -8,7 +8,7 @@
 #include "JNIMessageProducer.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(JNIMessaging), meta=(BlueprintSpawnableComponent) )
 class UNREALENGINEJNIMESSAGING_API UJNIMessageProducer : public UActorComponent
 {
 	GENERATED_BODY()
@@ -27,5 +27,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool Enqueue(FString Queue, FString Message);
+
+	UFUNCTION(BlueprintCallable)
+	void Empty(FString Queue);
 	
 };

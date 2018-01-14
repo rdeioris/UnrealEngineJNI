@@ -6,6 +6,7 @@
 #include "ModuleManager.h"
 #include "Queue.h"
 #include "ScopeLock.h"
+#include "UnrealEngineJNI.h"
 
 class FUnrealEngineJNIMessagingModule : public IModuleInterface
 {
@@ -23,5 +24,5 @@ public:
 
 private:
 	FCriticalSection JNIMessagingLock;
-	TMap<FString, TQueue<FString, EQueueMode::Mpsc>> JNIMessagingQueues;
+	TMap<FString, TSharedPtr<TQueue<FString, EQueueMode::Mpsc>>> JNIMessagingQueues;
 };

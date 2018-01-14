@@ -29,6 +29,20 @@ void UJNIMessageConsumer::TickComponent(float DeltaTime, ELevelTick TickType, FA
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	if (!OnMessageReceived.IsBound())
+		return;
+
+	if (QueueToConsume.IsEmpty())
+		return;
+
+	FUnrealEngineJNIMessagingModule &Module = FModuleManager::GetModuleChecked<FUnrealEngineJNIMessagingModule>("UnrealEngineJNIMessaging");
+
+	FString Message;
+	bool bMessageReceived = Module.JNIDequeue(QueueToConsume, Message);
+
+	if (bMessageReceived)
+	{
+		OnMessageReceived.Broadcast(Message);
+	}
 }
 

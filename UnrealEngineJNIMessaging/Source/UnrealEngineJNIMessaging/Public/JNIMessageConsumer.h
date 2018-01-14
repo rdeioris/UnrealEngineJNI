@@ -10,7 +10,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FJNIMessageConsumerDelegate, FString, Message);
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(JNIMessaging), meta=(BlueprintSpawnableComponent) )
 class UNREALENGINEJNIMESSAGING_API UJNIMessageConsumer : public UActorComponent
 {
 	GENERATED_BODY()
@@ -27,6 +27,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
-	
+	UPROPERTY(EditAnywhere)
+	FString QueueToConsume;
+
+	UPROPERTY(BlueprintAssignable)
+	FJNIMessageConsumerDelegate OnMessageReceived;
 };

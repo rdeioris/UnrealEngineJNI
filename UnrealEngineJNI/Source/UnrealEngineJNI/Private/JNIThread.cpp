@@ -7,7 +7,7 @@ FJNIRunnable::FJNIRunnable()
 	Thread = FRunnableThread::Create(this, TEXT("JNIThread"), 0, TPri_BelowNormal);
 	if (!Thread)
 	{
-		UE_LOG(LogJNI, Error, TEXT("Junable to create new FRunnableThread"));
+		UE_LOG(LogJNI, Error, TEXT("Unable to create new FRunnableThread"));
 	}
 }
 

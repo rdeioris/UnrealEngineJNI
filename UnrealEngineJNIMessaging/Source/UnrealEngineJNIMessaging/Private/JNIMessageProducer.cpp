@@ -38,3 +38,9 @@ bool UJNIMessageProducer::Enqueue(FString Queue, FString Message)
 	return Module.JNIEnqueue(Queue, Message);
 }
 
+void UJNIMessageProducer::Empty(FString Queue)
+{
+	FUnrealEngineJNIMessagingModule &Module = FModuleManager::GetModuleChecked<FUnrealEngineJNIMessagingModule>("UnrealEngineJNIMessaging");
+	Module.JNIEmpty(Queue);
+}
+
