@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "JNIMessaggingConsumer.h"
+#include "JNIMessageConsumer.h"
 
 
 // Sets default values for this component's properties
-UJNIMessaggingConsumer::UJNIMessaggingConsumer()
+UJNIMessageConsumer::UJNIMessageConsumer()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -15,7 +15,7 @@ UJNIMessaggingConsumer::UJNIMessaggingConsumer()
 
 
 // Called when the game starts
-void UJNIMessaggingConsumer::BeginPlay()
+void UJNIMessageConsumer::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -25,7 +25,7 @@ void UJNIMessaggingConsumer::BeginPlay()
 
 
 // Called every frame
-void UJNIMessaggingConsumer::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UJNIMessageConsumer::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 

@@ -5,9 +5,9 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "UnrealEngineJNIMessaging.h"
-#include "JNIMessaggingConsumer.generated.h"
+#include "JNIMessageConsumer.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParams(FJNIMessageConsumerDelegate, FString, Message);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FJNIMessageConsumerDelegate, FString, Message);
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
