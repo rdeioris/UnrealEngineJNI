@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "ModuleManager.h"
 #include "Paths.h"
+#include "HAL/IConsoleManager.h"
 #include <jni.h>
 
 
@@ -36,4 +37,7 @@ private:
 	JavaVM *JavaVirtualMachine;
 	JavaVMInitArgs JavaVirtualMachineArgs;
 	JNIEnv *JavaVirtualMachineMainThread;
+
+
+	void ConsoleJNICallStaticStringMethod(const TArray<FString> &Args);
 };

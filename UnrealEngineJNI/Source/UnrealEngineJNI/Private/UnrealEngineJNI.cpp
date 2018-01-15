@@ -28,6 +28,61 @@ void FUnrealEngineJNIModule::StartupModule()
 	}
 	UE_LOG(LogJNI, Log, TEXT("Successfully initialized Java Virtual Machine"));
 
+	IConsoleManager::Get().RegisterConsoleCommand(TEXT("JNICallStaticStringMethod"), TEXT("Call a JNI Method returning a String"), FConsoleCommandWithArgsDelegate::CreateRaw(this, &FUnrealEngineJNIModule::ConsoleJNICallStaticStringMethod));
+
+}
+
+// JNICallStringMethod HelloWorld fooBar 
+void FUnrealEngineJNIModule::ConsoleJNICallStaticStringMethod(const TArray<FString> &Args)
+{
+	JNIEnv *Env = JavaVirtualMachineMainThread;
+	if (!Env)
+	{
+		UE_LOG(LogJNI, Error, TEXT("The Java Virtual Machine is not initialized"));
+		return;
+	}
+
+	if (Args.Num() < 3)
+	{
+		UE_LOG(LogJNI, Error, TEXT("invalid syntax: JNICallStaticStringMethod <ClassName> <MethodName> <MethodSignature> [Args,...]"));
+		return;
+	}
+
+	const char *ClassName = TCHAR_TO_UTF8(*Args[0]);
+	const char *MethodName = TCHAR_TO_UTF8(*Args[1]);
+	const char *MethodSignature = TCHAR_TO_UTF8(*Args[2]);
+
+	jclass JClass = Env->FindClass(ClassName);
+	if (Env->ExceptionCheck())
+	{
+		Env->ExceptionClear();
+		UE_LOG(LogJNI, Error, TEXT("unable to find Java class %s"), UTF8_TO_TCHAR(ClassName));
+		return;
+	}
+
+	jmethodID JMethodID = Env->GetStaticMethodID(JClass, MethodName, MethodSignature);
+	if (Env->ExceptionCheck())
+	{
+		Env->ExceptionClear();
+		UE_LOG(LogJNI, Error, TEXT("unable to find Java method %s with signature %s"), UTF8_TO_TCHAR(MethodName), UTF8_TO_TCHAR(MethodSignature));
+		return;
+	}
+
+	jstring JString = (jstring)Env->CallStaticObjectMethod(JClass, JMethodID);
+	if (Env->ExceptionCheck())
+	{
+		// TODO report exception
+		Env->ExceptionClear();
+		UE_LOG(LogJNI, Error, TEXT("Exception"));
+		return;
+	}
+
+	const char *ReturnString = Env->GetStringUTFChars(JString, nullptr);
+	if (ReturnString)
+	{
+		UE_LOG(LogJNI, Log, TEXT("%s"), UTF8_TO_TCHAR(ReturnString));
+		Env->ReleaseStringUTFChars(JString, ReturnString);
+	}
 }
 
 void FUnrealEngineJNIModule::ShutdownModule()
