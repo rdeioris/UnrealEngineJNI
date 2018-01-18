@@ -39,5 +39,5 @@ private:
 	JNIEnv *JavaVirtualMachineMainThread;
 
 
-	void ConsoleJNICallStaticStringMethod(const TArray<FString> &Args);
+	void ConsoleJNICallStaticMethod(const TArray<FString> &Args);
 };

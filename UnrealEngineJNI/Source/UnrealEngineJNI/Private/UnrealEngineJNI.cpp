@@ -28,12 +28,12 @@ void FUnrealEngineJNIModule::StartupModule()
 	}
 	UE_LOG(LogJNI, Log, TEXT("Successfully initialized Java Virtual Machine"));
 
-	IConsoleManager::Get().RegisterConsoleCommand(TEXT("JNICallStaticStringMethod"), TEXT("Call a JNI Method returning a String"), FConsoleCommandWithArgsDelegate::CreateRaw(this, &FUnrealEngineJNIModule::ConsoleJNICallStaticStringMethod));
+	IConsoleManager::Get().RegisterConsoleCommand(TEXT("JNICallStaticMethod"), TEXT("Call a JNI Static Method"), FConsoleCommandWithArgsDelegate::CreateRaw(this, &FUnrealEngineJNIModule::ConsoleJNICallStaticMethod));
 
 }
 
 // JNICallStringMethod HelloWorld fooBar 
-void FUnrealEngineJNIModule::ConsoleJNICallStaticStringMethod(const TArray<FString> &Args)
+void FUnrealEngineJNIModule::ConsoleJNICallStaticMethod(const TArray<FString> &Args)
 {
 	JNIEnv *Env = JavaVirtualMachineMainThread;
 	if (!Env)
@@ -44,13 +44,17 @@ void FUnrealEngineJNIModule::ConsoleJNICallStaticStringMethod(const TArray<FStri
 
 	if (Args.Num() < 3)
 	{
-		UE_LOG(LogJNI, Error, TEXT("invalid syntax: JNICallStaticStringMethod <ClassName> <MethodName> <MethodSignature> [Args,...]"));
+		UE_LOG(LogJNI, Error, TEXT("invalid syntax: JNICallStaticMethod <ClassName> <MethodName> <MethodSignature> [Args,...]"));
 		return;
 	}
 
-	const char *ClassName = TCHAR_TO_UTF8(*Args[0]);
-	const char *MethodName = TCHAR_TO_UTF8(*Args[1]);
-	const char *MethodSignature = TCHAR_TO_UTF8(*Args[2]);
+	const FString &FClassName = Args[0];
+	const FString &FMethodName = Args[1];
+	const FString &FMethodSignature = Args[2];
+
+	const char *ClassName = TCHAR_TO_UTF8(*FClassName);
+	const char *MethodName = TCHAR_TO_UTF8(*FMethodName);
+	const char *MethodSignature = TCHAR_TO_UTF8(*FMethodSignature);
 
 	jclass JClass = Env->FindClass(ClassName);
 	if (Env->ExceptionCheck())
@@ -68,20 +72,32 @@ void FUnrealEngineJNIModule::ConsoleJNICallStaticStringMethod(const TArray<FStri
 		return;
 	}
 
-	jstring JString = (jstring)Env->CallStaticObjectMethod(JClass, JMethodID);
-	if (Env->ExceptionCheck())
+	if (FMethodSignature.EndsWith(")V"))
 	{
-		// TODO report exception
-		Env->ExceptionClear();
-		UE_LOG(LogJNI, Error, TEXT("Exception"));
-		return;
+		Env->CallStaticVoidMethod(JClass, JMethodID);
+		if (Env->ExceptionCheck())
+		{
+			// TODO report exception
+			Env->ExceptionClear();
+			return;
+		}
 	}
-
-	const char *ReturnString = Env->GetStringUTFChars(JString, nullptr);
-	if (ReturnString)
+	else if (FMethodSignature.EndsWith(")Ljava/lang/String;"))
 	{
-		UE_LOG(LogJNI, Log, TEXT("%s"), UTF8_TO_TCHAR(ReturnString));
-		Env->ReleaseStringUTFChars(JString, ReturnString);
+		jstring JString = (jstring)Env->CallStaticObjectMethod(JClass, JMethodID);
+		if (Env->ExceptionCheck())
+		{
+			// TODO report exception
+			Env->ExceptionClear();
+			return;
+		}
+
+		const char *ReturnString = Env->GetStringUTFChars(JString, nullptr);
+		if (ReturnString)
+		{
+			UE_LOG(LogJNI, Log, TEXT("%s"), UTF8_TO_TCHAR(ReturnString));
+			Env->ReleaseStringUTFChars(JString, ReturnString);
+		}
 	}
 }
 
